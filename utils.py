@@ -9,7 +9,7 @@ def cropObjectFromSource(source: np.ndarray, position: list[int]) -> np.ndarray:
     return source[ul_h: ul_h + h, ul_w: ul_w + w]
 
 
-def match(obj_old, obj_new, verbose=True):
+def match(obj_old, obj_new, th_dist=0.8, verbose=True):
     # extract local feature using SIFT
     sift = cv2.SIFT_create()  # initial SIFT class
 
@@ -22,7 +22,7 @@ def match(obj_old, obj_new, verbose=True):
     good_matches = []
     good_points = []
     for m, n in matches:
-        if m.distance < 0.85 * n.distance:  # control the threshold, like 0.75, 0.85
+        if m.distance < th_dist * n.distance:  # control the threshold, like 0.75, 0.85
             good_points.append((m.trainIdx, m.queryIdx))
             good_matches.append([m])
     # draw feature map

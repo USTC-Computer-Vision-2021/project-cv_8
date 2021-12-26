@@ -8,16 +8,19 @@ from utils import *
 def configure():
     parser = argparse.ArgumentParser(description='A look into the past')
     # Images
-    parser.add_argument('--img_old', type=str, help='The old image')
-    parser.add_argument('--img_new', type=str, help='The new image')
+    parser.add_argument('--img_old', type=str,   help='The old image')
+    parser.add_argument('--img_new', type=str,   help='The new image')
 
     # Overlapped Objects
-    parser.add_argument('--box_old', type=str, help='(upper_left, bottom_right) of the objects in the old')
-    parser.add_argument('--box_new', type=str, help='(upper_left, bottom_right) of the objects in the new')
+    parser.add_argument('--box_old', type=str,   help='(upper_left, bottom_right) of the objects in the old')
+    parser.add_argument('--box_new', type=str,   help='(upper_left, bottom_right) of the objects in the new')
+
+    # Threshold to control feature quality
+    parser.add_argument('--th_dist', type=float, help='Control the distance of 2 similar feature')
 
     # Misc
-    parser.add_argument('--verbose', type=bool, help='if True, show image and print numerical results')
-    parser.add_argument('--smooth', type=bool, help='if True, smooth the edge of 2 images')
+    parser.add_argument('--verbose', type=bool,  help='if True, show image and print numerical results')
+    parser.add_argument('--smooth',  type=bool,  help='if True, smooth the edge of 2 images')
 
     args = parser.parse_args()
 
@@ -26,6 +29,15 @@ def configure():
     args.img_new = './images/OldNorthGate_new.png'
     args.box_old = '158,61,426,539'
     args.box_new = '85,156,455,700'
+    args.th_dist = 0.85
+    args.verbose = 'True'
+
+    args.img_old = './images/WesternGate_old.jpeg'
+    args.img_new = './images/WesternGate_new.jpg'
+    args.box_old = '0,0,355,1000'
+    args.box_new = '0,50,226,821'
+    args.th_dist = 0.75
+    args.verbose = 'True'
 
     # convert str to int list and str to bool
     args.box_old = [int(str_num) for str_num in args.box_old.split(',')]
@@ -52,7 +64,7 @@ def main():
         plt.imshow(obj_new, cmap='gray'), plt.show()
 
     # Match and align the objects
-    H, img_trans = match(obj_old, obj_new)
+    H, img_trans = match(obj_old, obj_new, args.th_dist, args.verbose)
 
     # Smooth the edge
 
