@@ -1,23 +1,37 @@
 import argparse
 import cv2
-from auto_match import *
+import matplotlib.pyplot as plt
+import numpy as np
+from utils import *
 
 
 def configure():
     parser = argparse.ArgumentParser(description='A look into the past')
     # Images
-    parser.add_argument('--source', type=str, help='The old image', required=True)
-    parser.add_argument('--target', type=str, help='The new image', required=True)
-    # Overlapped Objects
-    parser.add_argument('--precise_pos', type=tuple, help='(upper_left, bottom_right) of the overlapped objects')
+    parser.add_argument('--img_old', type=str, help='The old image')
+    parser.add_argument('--img_new', type=str, help='The new image')
 
-    parser.add_argument('--vague_pos', type=str, help='The new image',
-                        choices=['upper left', 'upper', 'upper right',
-                                 'left', 'middle', 'right',
-                                 'bottom left', 'bottom', 'bottom right'])
-    parser.add_argument('--auto_match', type=bool, help='Whether to use auto match method')
+    # Overlapped Objects
+    parser.add_argument('--box_old', type=str, help='(upper_left, bottom_right) of the objects in the old')
+    parser.add_argument('--box_new', type=str, help='(upper_left, bottom_right) of the objects in the new')
+
+    # Misc
+    parser.add_argument('--verbose', type=bool, help='if True, show image and print numerical results')
+    parser.add_argument('--smooth', type=bool, help='if True, smooth the edge of 2 images')
 
     args = parser.parse_args()
+
+    # TODO: DEBUG
+    args.img_old = './images/OldNorthGate_old.png'
+    args.img_new = './images/OldNorthGate_new.png'
+    args.box_old = '158,61,426,539'
+    args.box_new = '85,156,455,700'
+
+    # convert str to int list and str to bool
+    args.box_old = [int(str_num) for str_num in args.box_old.split(',')]
+    args.box_new = [int(str_num) for str_num in args.box_new.split(',')]
+    args.verbose = True if args.verbose == 'True' else False
+    args.smooth = True if args.smooth == 'True' else False
 
     return args
 
@@ -27,22 +41,21 @@ def main():
     args = configure()
 
     # Read Images
-    img_source = cv2.imread(args.source, 0)
-    img_target = cv2.imread(args.target, 0)
+    img_old = cv2.imread(args.img_old, 0)
+    img_new = cv2.imread(args.img_new, 0)
 
     # Locate overlapped objects
-    if args.precise_pos:
-        img_overlapped = cropObjectFromSource(img_source, args.precise_pos)
-    elif args.vague_pos:
-        img_overlapped = cropObjectFromDescription(img_source, args.vague_pos)
-    else:
-        img_overlapped = autoMatch(img_source, img_target)
+    obj_old = cropObjectFromSource(img_old, args.box_old)
+    obj_new = cropObjectFromSource(img_new, args.box_new)
+    if args.verbose:
+        plt.imshow(obj_old, cmap='gray'), plt.show()
+        plt.imshow(obj_new, cmap='gray'), plt.show()
 
-    # Match the overlapped objects
-    w, h = img_overlapped.shape[::-1]
-    res = cv2.matchTemplate(img_target, img_overlapped, cv2.TM_CCORR_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-    top_left = max_loc
-    bottom_right = (top_left[0] + w, top_left[1] + h)
+    # Match and align the objects
+    H, img_trans = match(obj_old, obj_new)
+
+    # Smooth the edge
 
 
+if __name__ == '__main__':
+    main()
