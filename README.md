@@ -68,7 +68,7 @@ Poisson Blending，参见论文：Patrick P´erez 《Poisson Image Editing》，
 
 因此，我们要求使用者应该首先注释对象，以防有太多对象无法匹配并得到不想要的结果。
 
-![Screen Shot 2021-12-30 at 2.00.35 PM](/Users/wangpengcheng/Library/Application Support/typora-user-images/Screen Shot 2021-12-30 at 2.00.35 PM.png)
+![Screen Shot 2021-12-30 at 2.00.35 PM](https://tva1.sinaimg.cn/large/008i3skNly1gxvwhsqbawj325i0qyneq.jpg)
 
 架构：元组表示对角线上的左上角和右下角点`--box_[src] 'y_upper-left, x_upper-left, y_bottom-right, x_bottom-right'`。例如
 
