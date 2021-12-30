@@ -3,7 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 
-def cropObjectFromSource(source: np.ndarray, position: list[int]) -> np.ndarray:
+def cropObjectFromSource(source: np.ndarray, position) -> np.ndarray:
     ul_h, ul_w, br_h, br_w = position
     h, w = br_h - ul_h, br_w - ul_w
     return source[ul_h: ul_h + h, ul_w: ul_w + w]
@@ -29,6 +29,7 @@ def match(obj_old, obj_new, th_dist=0.8, verbose=True):
     if verbose:
         img_temp = np.zeros((1000, 1000), dtype='uint8')
         img_match = cv2.drawMatchesKnn(obj_old, kp_old, obj_new, kp_new, good_matches, img_temp, flags=2)
+        plt.title("img_match")
         plt.imshow(img_match), plt.show()
 
     # regression of 2 features
