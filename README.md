@@ -121,7 +121,7 @@ kp_new, des_new = sift.detectAndCompute(obj_new, None)
 
 这就旧照片的原图：
 
-<img src="/Users/wangpengcheng/Desktop/Screen Shot 2021-12-30 at 2.17.25 PM.png" alt="Screen Shot 2021-12-30 at 2.17.25 PM" style="zoom:50%;" />
+<img src="https://tva1.sinaimg.cn/large/008i3skNly1gxvwkazcfxj30ps0eg0u3.jpg" alt="Screen Shot 2021-12-30 at 2.17.25 PM" style="zoom:50%;" />
 
 这是经过仿射变换对齐之后的图像与原图的对比：可以发现文字的部分已经对齐，但是一教的部分由于当时相机拍摄的视角以及建筑的位置问题，对齐比较困难。
 
